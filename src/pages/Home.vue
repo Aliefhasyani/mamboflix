@@ -1,18 +1,21 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import Navbar from '@/components/Navbar.vue';
 import Footer from '@/components/Footer.vue';
 import PopularMovies from '@/components/PopularMovies.vue';
 import PopularTv from '@/components/PopularTv.vue';
+import SearchResults from '@/components/SearchResults.vue';
 
+const searchQuery = ref('');
 </script>
 
 <template>
   <div class="bg-brand-dark min-h-screen text-white font-sans overflow-x-hidden">
-    <Navbar />
+    <Navbar @search="searchQuery = $event" />
 
     <header class="relative h-[80vh] flex items-center px-8 md:px-16">
       <div class="absolute inset-0 z-0">
-        <img src="https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?auto=format&fit=crop&q=80&w=2070" 
+        <img src="https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?auto=format&fit=crop&q=80&w=2070"
              class="w-full h-full object-cover brightness-50" alt="Hero Background">
         <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-transparent"></div>
       </div>
@@ -36,14 +39,14 @@ import PopularTv from '@/components/PopularTv.vue';
     </header>
 
     <main class="relative z-20 -mt-24 space-y-10 pb-20">
-      
-      <PopularMovies></PopularMovies>
-      <PopularTv></PopularTv>
+      <SearchResults :query="searchQuery" />
 
- 
-
+      <template v-if="!searchQuery.trim()">
+        <PopularMovies />
+        <PopularTv />
+      </template>
     </main>
 
-    <Footer></Footer>
+    <Footer />
   </div>
 </template>
