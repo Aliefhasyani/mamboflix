@@ -21,15 +21,15 @@
           isLarge ? 'w-44 md:w-64 h-64 md:h-96' : 'w-32 md:w-52 h-48 md:h-28'
         ]"
       >
-        <img 
-          :src="`https://picsum.photos/seed/${index + title}/500/300`" 
-          alt="Movie Poster"
-          class="w-full h-full object-cover rounded-sm shadow-md"
-        />
-        
-        <div class="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-end p-2">
-          <p class="text-[10px] md:text-xs font-bold truncate">Movie Title {{ index + 1 }}</p>
-        </div>
+      <img 
+        :src="item.poster" 
+        :alt="item.title"
+        class="w-full h-full object-cover rounded-sm shadow-md"
+      />
+
+      <div class="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-end p-2">
+        <p class="text-[10px] md:text-xs font-bold truncate">{{ item.title }}</p>
+      </div>
       </div>
     </div>
   </div>

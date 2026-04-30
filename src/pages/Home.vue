@@ -2,8 +2,8 @@
 import Navbar from '@/components/Navbar.vue';
 import Footer from '@/components/Footer.vue';
 import PopularMovies from '@/components/PopularMovies.vue';
-import Footer from '@/components/Footer.vue';
-import Footer from '@/components/Footer.vue';
+import PopularTv from '@/components/PopularTv.vue';
+
 </script>
 
 <template>
@@ -37,7 +37,8 @@ import Footer from '@/components/Footer.vue';
 
     <main class="relative z-20 -mt-24 space-y-10 pb-20">
       
-      <PopularMovies />
+      <PopularMovies></PopularMovies>
+      <PopularTv></PopularTv>
 
  
 
