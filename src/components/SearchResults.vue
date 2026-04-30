@@ -5,6 +5,10 @@ import MovieRow from '@/components/MovieRow.vue';
 
 const props = defineProps<{ query: string }>();
 
+const emit = defineEmits<{
+  (e: 'select', id: number, type: 'movie' | 'tv'): void;
+}>();
+
 const results = ref<any[]>([]);
 const loading = ref(false);
 const noResults = ref(false);
@@ -33,13 +37,14 @@ const search = async (query: string) => {
       params: { api_key: apiKey, language: 'en-US', query, page: 1 },
     });
     const mapped = res.data.results
-      .filter((r: any) => r.backdrop_path)
+      .filter((r: any) => r.backdrop_path && (r.media_type === 'movie' || r.media_type === 'tv'))
       .map((r: any) => ({
         id: r.id,
         title: r.title ?? r.name,
         poster: `${imageBaseUrl}${r.backdrop_path}`,
         vote_average: r.vote_average,
         vote_count: r.vote_count,
+        media_type: r.media_type,
       }));
     results.value = mapped;
     noResults.value = mapped.length === 0;
@@ -59,6 +64,10 @@ const search = async (query: string) => {
       v-else-if="results.length > 0"
       :title="`Results for &quot;${query}&quot;`"
       :items="results"
+      @select="(id, _type) => {
+        const item = results.find(r => r.id === id);
+        emit('select', id, (item?.media_type ?? 'movie') as 'movie' | 'tv');
+      }"
     />
 
     <p v-else-if="noResults" class="text-gray-400 italic text-sm">

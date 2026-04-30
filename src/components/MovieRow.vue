@@ -9,6 +9,10 @@ const props = defineProps<{
   itemType?: 'movie' | 'tv';
 }>();
 
+const emit = defineEmits<{
+  (e: 'select', id: number, type: 'movie' | 'tv'): void;
+}>();
+
 const { isInWatchlist, toggleWatchlist } = useWatchlist();
 
 const rowRef = ref<HTMLElement | null>(null);
@@ -75,6 +79,7 @@ const handleToggle = (item: any) => {
             'relative flex-none transition-transform duration-300 ease-out cursor-pointer hover:scale-105 hover:z-30',
             isLarge ? 'w-44 md:w-64 h-64 md:h-96' : 'w-32 md:w-52 h-48 md:h-28'
           ]"
+          @click="emit('select', item.id, props.itemType ?? 'movie')"
         >
           <img
             :src="item.poster"

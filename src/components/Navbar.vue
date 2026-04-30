@@ -70,8 +70,7 @@
         >{{ watchlistCount > 99 ? '99+' : watchlistCount }}</span>
       </button>
 
-      <i class="fas fa-bell cursor-pointer"></i>
-      <div class="w-8 h-8 bg-blue-500 rounded"></div>
+
     </div>
   </nav>
 </template>

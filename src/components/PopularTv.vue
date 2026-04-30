@@ -3,6 +3,10 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import MovieRow from '@/components/MovieRow.vue';
 
+const emit = defineEmits<{
+  (e: 'select', id: number, type: 'movie' | 'tv'): void;
+}>();
+
 const tvShows = ref([]);
 const loading = ref(true);
 
@@ -48,6 +52,7 @@ fetchTVShows();
       title="Popular TV Shows" 
       :items="tvShows"
       itemType="tv"
+      @select="(id, type) => emit('select', id, type)"
     />
   </div>
 </template>

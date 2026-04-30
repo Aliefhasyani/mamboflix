@@ -6,6 +6,7 @@ import PopularMovies from '@/components/PopularMovies.vue';
 import PopularTv from '@/components/PopularTv.vue';
 import SearchResults from '@/components/SearchResults.vue';
 import Watchlist from '@/pages/Watchlist.vue';
+import MovieDetailModal from '@/components/MovieDetailModal.vue';
 
 const searchQuery = ref('');
 const currentPage = ref<'home' | 'watchlist'>('home');
@@ -14,13 +15,30 @@ const handleNavigate = (page: string) => {
   currentPage.value = page as 'home' | 'watchlist';
   searchQuery.value = '';
 };
+
+const selectedId = ref<number | null>(null);
+const selectedType = ref<'movie' | 'tv'>('movie');
+
+const openDetail = (id: number, type: 'movie' | 'tv') => {
+  selectedId.value = id;
+  selectedType.value = type;
+};
+
+const closeDetail = () => {
+  selectedId.value = null;
+};
 </script>
 
 <template>
-  <!-- Watchlist page -->
-  <Watchlist v-if="currentPage === 'watchlist'" @navigate="handleNavigate" />
+  <MovieDetailModal
+    :item-id="selectedId"
+    :item-type="selectedType"
+    @close="closeDetail"
+    @open-similar="openDetail"
+  />
 
-  <!-- Home page -->
+  <Watchlist v-if="currentPage === 'watchlist'" @navigate="handleNavigate" @select="openDetail" />
+
   <div v-else class="bg-brand-dark min-h-screen text-white font-sans overflow-x-hidden">
     <Navbar @search="searchQuery = $event" @navigate="handleNavigate" />
 
@@ -38,23 +56,16 @@ const handleNavigate = (page: string) => {
         <p class="text-lg md:text-xl mb-6 text-gray-200 leading-relaxed">
           When a young boy vanishes, a small town uncovers a mystery involving secret experiments and terrifying supernatural forces.
         </p>
-        <div class="flex gap-3 font-sans">
-          <button class="bg-white text-black px-8 py-2 rounded font-bold hover:bg-gray-200 transition">
-             Play
-          </button>
-          <button class="bg-gray-500/70 text-white px-8 py-2 rounded font-bold hover:bg-gray-600/70 transition">
-             More Info
-          </button>
-        </div>
+        
       </div>
     </header>
 
     <main class="relative z-20 -mt-24 space-y-10 pb-20">
-      <SearchResults :query="searchQuery" />
+      <SearchResults :query="searchQuery" @select="openDetail" />
 
       <template v-if="!searchQuery.trim()">
-        <PopularMovies />
-        <PopularTv />
+        <PopularMovies @select="openDetail" />
+        <PopularTv @select="openDetail" />
       </template>
     </main>
 
