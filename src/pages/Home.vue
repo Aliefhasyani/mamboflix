@@ -7,6 +7,7 @@ import PopularTv from '@/components/PopularTv.vue';
 import SearchResults from '@/components/SearchResults.vue';
 import Watchlist from '@/pages/Watchlist.vue';
 import MovieDetailModal from '@/components/MovieDetailModal.vue';
+import GenreRows from '@/components/GenreRows.vue';
 
 const searchQuery = ref('');
 const currentPage = ref<'home' | 'watchlist'>('home');
@@ -66,6 +67,7 @@ const closeDetail = () => {
       <template v-if="!searchQuery.trim()">
         <PopularMovies @select="openDetail" />
         <PopularTv @select="openDetail" />
+        <GenreRows @select="openDetail" />
       </template>
     </main>
 
