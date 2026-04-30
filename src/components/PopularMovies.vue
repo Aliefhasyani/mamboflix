@@ -32,9 +32,9 @@ const fetchMovies = async () => {
   }
 };
 
-onMounted(() => {
-  fetchMovies();
-});
+
+fetchMovies();
+
 </script>
 
 <template>
@@ -49,8 +49,6 @@ onMounted(() => {
       :items="movies" 
     />
 
-    <div v-else class="px-12 py-10 text-red-500">
-      Gagal memuat data. Cek API Key di console.
-    </div>
+   
   </div>
 </template>
