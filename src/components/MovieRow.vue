@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 
 defineProps<{
   title: string;
@@ -8,15 +8,6 @@ defineProps<{
 }>();
 
 const rowRef = ref<HTMLElement | null>(null);
-const canScrollLeft = ref(false);
-const canScrollRight = ref(true);
-
-const updateScrollState = () => {
-  const el = rowRef.value;
-  if (!el) return;
-  canScrollLeft.value = el.scrollLeft > 0;
-  canScrollRight.value = el.scrollLeft + el.clientWidth < el.scrollWidth - 1;
-};
 
 const scroll = (direction: 'left' | 'right') => {
   const el = rowRef.value;
@@ -25,10 +16,6 @@ const scroll = (direction: 'left' | 'right') => {
   el.scrollBy({ left: direction === 'left' ? -amount : amount, behavior: 'smooth' });
 };
 
-onMounted(() => {
-  updateScrollState();
-  rowRef.value?.addEventListener('scroll', updateScrollState);
-});
 </script>
 
 <template>
@@ -40,7 +27,6 @@ onMounted(() => {
     <div class="relative">
 
       <button
-        v-show="canScrollLeft"
         @click="scroll('left')"
         aria-label="Scroll left"
         class="absolute left-[-1rem] top-1/2 -translate-y-1/2 z-20
@@ -57,7 +43,6 @@ onMounted(() => {
         </svg>
       </button>
 
-
       <div
         ref="rowRef"
         class="flex overflow-x-scroll overflow-y-hidden scrollbar-hide space-x-3 p-2 -m-2"
@@ -72,9 +57,22 @@ onMounted(() => {
         >
           <img
             :src="item.poster"
-            :alt="item.title"
             class="w-full h-full object-cover rounded-sm shadow-md"
           />
+
+          <span
+            v-if="item.vote_average > 8 && item.vote_count > 1000"
+            class="absolute top-1.5 left-1.5 z-10
+                   flex items-center gap-0.5
+                   bg-yellow-400 text-black text-[9px] md:text-[10px]
+                   font-bold px-1.5 py-0.5 rounded-sm
+                   shadow-md tracking-wide uppercase"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-2.5 h-2.5 shrink-0">
+              <path fill-rule="evenodd" d="M8 1.25a.75.75 0 0 1 .692.462l1.41 3.393 3.664.293a.75.75 0 0 1 .428 1.317l-2.791 2.398.853 3.584a.75.75 0 0 1-1.12.814L8 11.345l-3.136 1.966a.75.75 0 0 1-1.12-.814l.853-3.584-2.79-2.398a.75.75 0 0 1 .427-1.317l3.664-.293L7.308 1.712A.75.75 0 0 1 8 1.25Z" clip-rule="evenodd" />
+            </svg>
+            Recommended
+          </span>
 
           <div class="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-end p-2">
             <p class="text-[10px] md:text-xs font-bold truncate">{{ item.title }}</p>
@@ -82,9 +80,7 @@ onMounted(() => {
         </div>
       </div>
 
-
       <button
-        v-show="canScrollRight"
         @click="scroll('right')"
         aria-label="Scroll right"
         class="absolute right-[-1rem] top-1/2 -translate-y-1/2 z-20
@@ -105,7 +101,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 </style>

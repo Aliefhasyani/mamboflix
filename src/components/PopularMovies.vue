@@ -23,7 +23,9 @@ const fetchMovies = async () => {
     movies.value = response.data.results.map((movie: any) => ({
       id: movie.id,
       title: movie.title,
-      poster: `${imageBaseUrl}${movie.backdrop_path}`, 
+      poster: `${imageBaseUrl}${movie.backdrop_path}`,
+      vote_average: movie.vote_average,
+      vote_count: movie.vote_count,
     }));
   } catch (error) {
     console.error('Error fetching TMDB data:', error);

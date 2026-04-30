@@ -38,6 +38,8 @@ const search = async (query: string) => {
         id: r.id,
         title: r.title ?? r.name,
         poster: `${imageBaseUrl}${r.backdrop_path}`,
+        vote_average: r.vote_average,
+        vote_count: r.vote_count,
       }));
     results.value = mapped;
     noResults.value = mapped.length === 0;

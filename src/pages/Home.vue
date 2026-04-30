@@ -19,7 +19,7 @@ const searchQuery = ref('');
              class="w-full h-full object-cover brightness-50" alt="Hero Background">
         <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-transparent"></div>
       </div>
-
+      <!-- hard code saja filmnya karena cuma untuk kebutuhan ui :DD -->
       <div class="relative z-10 max-w-2xl">
         <h1 class="font-display text-6xl md:text-8xl mb-4 tracking-wide uppercase">
           Stranger Things
@@ -47,6 +47,6 @@ const searchQuery = ref('');
       </template>
     </main>
 
-    <Footer />
+    <Footer></Footer>
   </div>
 </template>

@@ -22,8 +22,10 @@ const fetchTVShows = async () => {
     
     tvShows.value = response.data.results.map((tv: any) => ({
       id: tv.id,
-      title: tv.name, 
-      poster: `${imageBaseUrl}${tv.backdrop_path}`, 
+      title: tv.name,
+      poster: `${imageBaseUrl}${tv.backdrop_path}`,
+      vote_average: tv.vote_average,
+      vote_count: tv.vote_count,
     }));
   } catch (error) {
     console.error('Error fetching TV data:', error);
@@ -32,9 +34,9 @@ const fetchTVShows = async () => {
   }
 };
 
-onMounted(() => {
-  fetchTVShows();
-});
+
+fetchTVShows();
+
 </script>
 
 <template>

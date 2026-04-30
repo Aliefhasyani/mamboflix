@@ -5,9 +5,7 @@
       <i class="fab fa-instagram cursor-pointer hover:text-gray-300"></i>
       <i class="fab fa-twitter cursor-pointer hover:text-gray-300"></i>
       <i class="fab fa-youtube cursor-pointer hover:text-gray-300"></i>
-    </div>
-
-
-  
+    </div> 
   </footer>
 </template>
+
