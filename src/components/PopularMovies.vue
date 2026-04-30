@@ -34,9 +34,7 @@ const fetchMovies = async () => {
   }
 };
 
-
 fetchMovies();
-
 </script>
 
 <template>
@@ -48,7 +46,8 @@ fetchMovies();
     <MovieRow 
       v-else-if="movies.length > 0"
       title="Popular on mamboflix" 
-      :items="movies" 
+      :items="movies"
+      itemType="movie"
     />
 
    

@@ -5,13 +5,24 @@ import Footer from '@/components/Footer.vue';
 import PopularMovies from '@/components/PopularMovies.vue';
 import PopularTv from '@/components/PopularTv.vue';
 import SearchResults from '@/components/SearchResults.vue';
+import Watchlist from '@/pages/Watchlist.vue';
 
 const searchQuery = ref('');
+const currentPage = ref<'home' | 'watchlist'>('home');
+
+const handleNavigate = (page: string) => {
+  currentPage.value = page as 'home' | 'watchlist';
+  searchQuery.value = '';
+};
 </script>
 
 <template>
-  <div class="bg-brand-dark min-h-screen text-white font-sans overflow-x-hidden">
-    <Navbar @search="searchQuery = $event" />
+  <!-- Watchlist page -->
+  <Watchlist v-if="currentPage === 'watchlist'" @navigate="handleNavigate" />
+
+  <!-- Home page -->
+  <div v-else class="bg-brand-dark min-h-screen text-white font-sans overflow-x-hidden">
+    <Navbar @search="searchQuery = $event" @navigate="handleNavigate" />
 
     <header class="relative h-[80vh] flex items-center px-8 md:px-16">
       <div class="absolute inset-0 z-0">

@@ -1,13 +1,19 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useWatchlist } from '@/composables/useWatchlist';
 
-defineProps<{
+const props = defineProps<{
   title: string;
   items: any[];
   isLarge?: boolean;
+  itemType?: 'movie' | 'tv';
 }>();
 
+const { isInWatchlist, toggleWatchlist } = useWatchlist();
+
 const rowRef = ref<HTMLElement | null>(null);
+
+const toastMap = ref<Record<number, 'added' | 'removed' | null>>({});
 
 const scroll = (direction: 'left' | 'right') => {
   const el = rowRef.value;
@@ -16,6 +22,21 @@ const scroll = (direction: 'left' | 'right') => {
   el.scrollBy({ left: direction === 'left' ? -amount : amount, behavior: 'smooth' });
 };
 
+const handleToggle = (item: any) => {
+  const wasIn = isInWatchlist(item.id);
+  toggleWatchlist({
+    id: item.id,
+    title: item.title,
+    poster: item.poster,
+    vote_average: item.vote_average,
+    vote_count: item.vote_count,
+    type: props.itemType ?? 'movie',
+  });
+  toastMap.value[item.id] = wasIn ? 'removed' : 'added';
+  setTimeout(() => {
+    toastMap.value[item.id] = null;
+  }, 1800);
+};
 </script>
 
 <template>
@@ -74,9 +95,44 @@ const scroll = (direction: 'left' | 'right') => {
             Recommended
           </span>
 
-          <div class="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-end p-2">
-            <p class="text-[10px] md:text-xs font-bold truncate">{{ item.title }}</p>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-200 flex flex-col justify-between p-2 rounded-sm">
+            <div></div>
+            <div class="space-y-1.5">
+              <p class="text-[10px] md:text-xs font-bold truncate leading-tight">{{ item.title }}</p>
+              <button
+                @click.stop="handleToggle(item)"
+                :class="[
+                  'flex items-center gap-1 text-[9px] md:text-[10px] font-semibold px-2 py-1 rounded-full transition-all duration-200 w-full justify-center',
+                  isInWatchlist(item.id)
+                    ? 'bg-white text-black hover:bg-red-500 hover:text-white'
+                    : 'bg-white/20 text-white border border-white/40 hover:bg-white hover:text-black backdrop-blur-sm'
+                ]"
+                :aria-label="isInWatchlist(item.id) ? 'Remove from watchlist' : 'Add to watchlist'"
+              >
+                <svg v-if="isInWatchlist(item.id)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3 shrink-0">
+                  <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+                </svg>
+                <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3 shrink-0">
+                  <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
+                </svg>
+                {{ isInWatchlist(item.id) ? 'In My List' : 'My List' }}
+              </button>
+            </div>
           </div>
+
+          <transition name="toast-pop">
+            <div
+              v-if="toastMap[item.id]"
+              class="absolute inset-x-0 top-2 mx-2 z-40 flex items-center justify-center"
+            >
+              <span :class="[
+                'text-[9px] font-bold px-2 py-0.5 rounded-full shadow-lg',
+                toastMap[item.id] === 'added' ? 'bg-red-600 text-white' : 'bg-gray-700 text-gray-200'
+              ]">
+                {{ toastMap[item.id] === 'added' ? '✓ Added to My List' : '✕ Removed' }}
+              </span>
+            </div>
+          </transition>
         </div>
       </div>
 
@@ -103,4 +159,12 @@ const scroll = (direction: 'left' | 'right') => {
 <style scoped>
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+.toast-pop-enter-active { animation: toast-in 0.25s ease-out; }
+.toast-pop-leave-active { animation: toast-in 0.2s ease-in reverse; }
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(-6px) scale(0.9); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
 </style>

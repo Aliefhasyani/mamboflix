@@ -34,9 +34,7 @@ const fetchTVShows = async () => {
   }
 };
 
-
 fetchTVShows();
-
 </script>
 
 <template>
@@ -48,7 +46,8 @@ fetchTVShows();
     <MovieRow 
       v-else
       title="Popular TV Shows" 
-      :items="tvShows" 
+      :items="tvShows"
+      itemType="tv"
     />
   </div>
 </template>
