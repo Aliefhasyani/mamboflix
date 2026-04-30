@@ -77,7 +77,7 @@ const handleToggle = (item: any) => {
           :key="index"
           :class="[
             'relative flex-none transition-transform duration-300 ease-out cursor-pointer hover:scale-105 hover:z-30',
-            isLarge ? 'w-44 md:w-64 h-64 md:h-96' : 'w-32 md:w-52 h-48 md:h-28'
+            isLarge ? 'w-44 md:w-56 h-64 md:h-80' : 'w-32 md:w-40 h-48 md:h-60'
           ]"
           @click="emit('select', item.id, props.itemType ?? 'movie')"
         >
